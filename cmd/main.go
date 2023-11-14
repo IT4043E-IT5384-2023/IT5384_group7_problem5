@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-	s := spinner.New(spinner.CharSets[36], 100*time.Millisecond)
 	app := bootstrap.App()
 	env := app.Env
 
@@ -21,20 +20,21 @@ func main() {
 	// Goroutine for crawl wallet block and wallet
 	var wg sync.WaitGroup
 	wg.Add(2)
-	go walletCrawl(&wg, db, s, env)
-	go blockCrawl(&wg, db, s, env)
+	go walletCrawl(&wg, db, env)
+	go blockCrawl(&wg, db, env)
 	wg.Wait()
 
-	// Goroutine for crawl transactions
-	var wt sync.WaitGroup
-	wt.Add(1)
-	go transactionCrawl(&wt, db, s, env)
-	wt.Wait()
+	//// Goroutine for crawl transactions
+	//var wt sync.WaitGroup
+	//wt.Add(1)
+	//go transactionCrawl(&wt, db, env)
+	//wt.Wait()
 
 	fmt.Println("+++++COMPLETE+++++")
 }
 
-func transactionCrawl(wg *sync.WaitGroup, db mongo.Database, s *spinner.Spinner, env *bootstrap.Env) {
+func transactionCrawl(wg *sync.WaitGroup, db mongo.Database, env *bootstrap.Env) {
+	s := spinner.New(spinner.CharSets[36], 100*time.Millisecond)
 	fmt.Println("====TRANSACTIONS====")
 	tc := crawler.TransactionCrawler{
 		Database:   db,
@@ -46,8 +46,8 @@ func transactionCrawl(wg *sync.WaitGroup, db mongo.Database, s *spinner.Spinner,
 	defer wg.Done()
 }
 
-func blockCrawl(wg *sync.WaitGroup, db mongo.Database, s *spinner.Spinner, env *bootstrap.Env) {
-	fmt.Println("====BLOCKS====")
+func blockCrawl(wg *sync.WaitGroup, db mongo.Database, env *bootstrap.Env) {
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	bc := crawler.BlockCrawler{
 		Database:   db,
 		Collection: "blocks",
@@ -58,8 +58,8 @@ func blockCrawl(wg *sync.WaitGroup, db mongo.Database, s *spinner.Spinner, env *
 	defer wg.Done()
 }
 
-func walletCrawl(wg *sync.WaitGroup, db mongo.Database, s *spinner.Spinner, env *bootstrap.Env) {
-	fmt.Println("====WALLETS====")
+func walletCrawl(wg *sync.WaitGroup, db mongo.Database, env *bootstrap.Env) {
+	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	wc := crawler.WalletCrawler{
 		Database:   db,
 		Collection: "wallets",

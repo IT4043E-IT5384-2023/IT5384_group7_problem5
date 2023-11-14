@@ -10,6 +10,8 @@ import (
 	"io/ioutil"
 )
 
+const MAX_STEP = 50
+
 type BlockCrawler struct {
 	Database   mongo.Database
 	Collection string
@@ -40,21 +42,31 @@ type Block struct {
 }
 
 func (bc *BlockCrawler) Crawl(env *bootstrap.Env) {
-	var blocks []Block
 	collection := bc.Database.Collection(bc.Collection)
 
-	filter := bson.A{
-		bson.D{{"$limit", env.NumberOfBlocks}},
-	}
-	cursor, err := collection.Aggregate(context.Background(), filter)
+	step := env.NumberOfBlocks / MAX_STEP
+	var allBlocks []Block
 
+	for i := 0; i < MAX_STEP; i++ {
+		fmt.Println("block_step_", i)
+		var blocks []Block
+		filter := bson.A{
+			bson.D{{"$skip", i * int(step)}},
+			bson.D{{"$limit", (i + 1) * int(step)}},
+		}
+		cursor, err := collection.Aggregate(context.Background(), filter)
+		if err != nil {
+			panic(err)
+		}
+		cursor.All(context.Background(), &blocks)
+		allBlocks = append(allBlocks, blocks...)
+	}
+
+	// Write file
+	blocksJson, _ := json.Marshal(allBlocks)
+	file := fmt.Sprintf("data/%s_blocks.json", env.DBName)
+	err := ioutil.WriteFile(file, blocksJson, 0644)
 	if err != nil {
 		panic(err)
 	}
-	cursor.All(context.Background(), &blocks)
-
-	// Write file
-	blocksJson, _ := json.Marshal(blocks)
-	file := fmt.Sprintf("data/%s_blocks.json", env.DBName)
-	err = ioutil.WriteFile(file, blocksJson, 0644)
 }

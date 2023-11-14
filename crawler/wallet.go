@@ -28,21 +28,31 @@ type Wallet struct {
 func (wc *WalletCrawler) Crawl(env *bootstrap.Env) {
 
 	collection := wc.Database.Collection(wc.Collection)
-	filter := bson.A{
-		bson.D{{"$limit", env.NumberOfWallets}},
+
+	var allWallets []Wallet
+	step := env.NumberOfWallets / MAX_STEP
+
+	for i := 0; i < MAX_STEP; i++ {
+		fmt.Println("wallet_step_", i)
+		var wallets []Wallet
+		filter := bson.A{
+			bson.D{{"$skip", i * int(step)}},
+			bson.D{{"$limit", (i + 1) * int(step)}},
+		}
+
+		cursor, err := collection.Aggregate(context.Background(), filter)
+		if err != nil {
+			panic(err)
+		}
+		cursor.All(context.Background(), &wallets)
+		allWallets = append(allWallets, wallets...)
 	}
 
-	cursor, err := collection.Aggregate(context.Background(), filter)
+	// Write file
+	walletsJson, _ := json.Marshal(allWallets)
+	file := fmt.Sprintf("data/%s_wallets.json", env.DBName)
+	err := ioutil.WriteFile(file, walletsJson, 0644)
 	if err != nil {
 		panic(err)
 	}
-	var wallets []Wallet
-
-	// Convert data
-	cursor.All(context.Background(), &wallets)
-
-	// Write file
-	walletsJson, _ := json.Marshal(wallets)
-	file := fmt.Sprintf("data/%s_wallets.json", env.DBName)
-	err = ioutil.WriteFile(file, walletsJson, 0644)
 }

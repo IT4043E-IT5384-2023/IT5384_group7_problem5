@@ -23,20 +23,20 @@ type DecodedInput struct {
 }
 
 type Transaction struct {
-	ID               string `bson:"_id" json:"id"`
-	Type             string `bson:"type" json:"type"`
-	Hash             string `bson:"hash" json:"hash"`
-	Nonce            int32  `bson:"nonce" json:"nonce"`
-	TransactionIndex int32  `bson:"transaction_index" json:"transaction_index"`
-	FromAddress      string `bson:"from_address" json:"from_address"`
-	ToAddress        string `bson:"to_address" json:"to_address"`
-	Value            string `bson:"value" json:"value"`
-	Gas              string `bson:"gas" json:"gas"`
-	GasPrice         string `bson:"gas_price" json:"gas_price"`
-	Input            string `bson:"input" json:"input"`
-	BlockTimestamp   int32  `bson:"block_timestamp" json:"block_timestamp"`
-	BlockNumber      int32  `bson:"block_number" json:"block_number"`
-	//BlockHash              *string        `bson:"block_hash" json:"block_hash"`
+	ID               string  `bson:"_id" json:"id"`
+	Type             string  `bson:"type" json:"type"`
+	Hash             string  `bson:"hash" json:"hash"`
+	Nonce            int32   `bson:"nonce" json:"nonce"`
+	TransactionIndex int32   `bson:"transaction_index" json:"transaction_index"`
+	FromAddress      string  `bson:"from_address" json:"from_address"`
+	ToAddress        string  `bson:"to_address" json:"to_address"`
+	Value            string  `bson:"value" json:"value"`
+	Gas              string  `bson:"gas" json:"gas"`
+	GasPrice         string  `bson:"gas_price" json:"gas_price"`
+	Input            string  `bson:"input" json:"input"`
+	BlockTimestamp   int32   `bson:"block_timestamp" json:"block_timestamp"`
+	BlockNumber      int32   `bson:"block_number" json:"block_number"`
+	BlockHash        *string `bson:"block_hash" json:"block_hash"`
 	//ReceiptGasUsed         *string       `bson:"receipt_gas_used" json:"receipt_gas_used"`
 	//ReceiptContractAddress *string       `bson:"receipt_contract_address" json:"receipt_contract_address"`
 	//ReceiptRoot            *string       `bson:"receipt_root" json:"receipt_root"`
