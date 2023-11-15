@@ -24,11 +24,11 @@ func main() {
 	go blockCrawl(&wg, db, env)
 	wg.Wait()
 
-	//// Goroutine for crawl transactions
-	//var wt sync.WaitGroup
-	//wt.Add(1)
-	//go transactionCrawl(&wt, db, env)
-	//wt.Wait()
+	// Goroutine for crawl transactions
+	var wt sync.WaitGroup
+	wt.Add(1)
+	go transactionCrawl(&wt, db, env)
+	wt.Wait()
 
 	fmt.Println("+++++COMPLETE+++++")
 }
