@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/quandat10/bigdata-crawl/bootstrap"
 	"github.com/quandat10/bigdata-crawl/mongo"
 	"go.mongodb.org/mongo-driver/bson"
-	"io/ioutil"
 )
 
 type WalletCrawler struct {
@@ -33,7 +34,6 @@ func (wc *WalletCrawler) Crawl(env *bootstrap.Env) {
 	step := env.NumberOfWallets / MAX_STEP
 
 	for i := 0; i < MAX_STEP; i++ {
-		fmt.Println("wallet_step_", i)
 		var wallets []Wallet
 		filter := bson.A{
 			bson.D{{"$skip", i * int(step)}},

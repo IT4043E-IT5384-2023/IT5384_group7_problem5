@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/briandowns/spinner"
 	"github.com/quandat10/bigdata-crawl/bootstrap"
 	"github.com/quandat10/bigdata-crawl/crawler"
 	"github.com/quandat10/bigdata-crawl/mongo"
-	"sync"
-	"time"
 )
 
 func main() {
@@ -19,9 +20,9 @@ func main() {
 
 	// Goroutine for crawl wallet block and wallet
 	var wg sync.WaitGroup
-	wg.Add(2)
+	wg.Add(1)
 	go walletCrawl(&wg, db, env)
-	go blockCrawl(&wg, db, env)
+	// go blockCrawl(&wg, db, env)
 	wg.Wait()
 
 	// Goroutine for crawl transactions

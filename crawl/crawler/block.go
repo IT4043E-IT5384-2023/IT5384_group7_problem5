@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/quandat10/bigdata-crawl/bootstrap"
 	"github.com/quandat10/bigdata-crawl/mongo"
 	"go.mongodb.org/mongo-driver/bson"
-	"io/ioutil"
 )
 
-const MAX_STEP = 50
+const MAX_STEP = 5
 
 type BlockCrawler struct {
 	Database   mongo.Database
