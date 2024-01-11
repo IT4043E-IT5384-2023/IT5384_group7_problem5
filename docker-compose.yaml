@@ -41,8 +41,6 @@ services:
     image: obsidiandynamics/kafdrop:latest
     networks: 
       - common
-    depends_on:
-      - kafka
     ports:
       - 19000:9000
     environment:
